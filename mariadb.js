@@ -6,7 +6,7 @@ var Promise = require("promise");
 var crypto = require("crypto");
 
 function checkName(name){
-    if (typeof name !== "string" || name.toLowerCase() === "admin" || name.toLowerCase() === "config"){
+    if (typeof name !== "string" || name.toLowerCase() === "queues"){
         return false;
     }
     else{
@@ -120,7 +120,7 @@ function ConfigDB(obj){
             throw new Error("Missing one or more of the required options: host, user, password, db")
         }
 
-        that.table = Client.escape("config");
+        that.table = Client.escape("queues");
 
         that.host = obj.host;
         that.user = obj.user;
@@ -140,7 +140,7 @@ function ConfigDB(obj){
 ConfigDB.prototype.createConfigTable = function(){
     var that = this;
 
-    return new Promise(function(resolve, reject){
+    var created = new Promise(function(resolve, reject){
         that.client.query(
             "CREATE TABLE IF NOT EXISTS " + that.table + " (" +
             "`name` varchar(30) NOT NULL, " +
@@ -153,6 +153,31 @@ ConfigDB.prototype.createConfigTable = function(){
             if (err) reject(err);
             else resolve();
         });
+    });
+
+    return new Promise(function(resolve, reject){
+        created.then(
+            function(){
+                that.client.query("SELECT * FROM " + that.table + " WHERE `name` = 'admin' LIMIT 1",
+                    function(err, result){
+                        if (err) reject(err);
+                        else {
+                            if (result.length > 0) resolve();
+                            else {
+                                that.client.query("INSERT INTO " + that.table +
+                                    " (`name`, `hash`) VALUES ('admin', '" + hashPassword(password) + "')",
+                                    function(err){
+                                        if (err) reject(err);
+                                        else resolve();
+                                    });
+                            }
+                        }
+                    });
+            },
+            function(err){
+                reject(err);
+            }
+        );
     });
 };
 
@@ -371,7 +396,7 @@ ConfigDB.prototype.getAllQueues = function () {
     var that = this;
 
     return new Promise(function(resolve, reject){
-        that.client.query("SELECT `name`, `description` FROM " + that.table + " ORDER BY `name` DESC",
+        that.client.query("SELECT `name`, `description` FROM " + that.table + " WHERE `name` != 'admin' ORDER BY `name` ASC",
             function (err, result) {
                 if (err) reject(err);
                 else resolve(result);
