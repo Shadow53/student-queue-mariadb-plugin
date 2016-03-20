@@ -330,7 +330,7 @@ ConfigDB.prototype.setQueueName = function (oldName, newName) {
     return new Promise(function(resolve, reject){
         newExist.then(
             function(){
-                that.connection.query("UPDATE " + that.table + "SET `name` = :new WHERE `name` = :old",
+                that.client.query("UPDATE " + that.table + "SET `name` = :new WHERE `name` = :old",
                     {new: newName, old: oldName}, function(err){
                         if (err) reject(err);
                         else resolve();
