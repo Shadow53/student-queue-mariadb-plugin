@@ -6,7 +6,7 @@ var Promise = require("promise");
 var crypto = require("crypto");
 
 function checkName(name){
-    if (typeof name !== "string"){
+    if (typeof name !== "string" || name.toLowerCase() === "admin" || name.toLowerCase() === "config"){
         return false;
     }
     else{
