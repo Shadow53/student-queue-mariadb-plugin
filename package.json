@@ -3,35 +3,37 @@
     "Michael Bryant <shadow53@shadow53.com>"
   ],
   "dependencies": {
-    "mysql": "2.10.x",
-    "promised-io": "0.3.x"
+    "mariasql": "0.2.x",
+    "promise": "7.1.x"
   },
   "description": "MySQL-compatible plugin for my student-queue program",
   "installable": true,
   "maintainers": [
     "Shadow53 <shadow53@shadow53.com>"
   ],
-  "name": "student-queue-mysql-plugin",
+  "name": "student-queue-mariadb-plugin",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Shadow53/student-queue-mysql-plugin.git"
+    "url": "git://github.com/Shadow53/student-queue-mariadb-plugin.git"
   },
   "license": "GPL-3.0",
   "bugs": {
     "url": 
-"https://github.com/Shadow53/student-queue-mysql-plugin/issues"
+"https://github.com/Shadow53/student-queue-mariadb-plugin/issues"
   },
   "homepage": 
-"https://github.com/Shadow53/student-queue-mysql-plugin#readme",
-  "version": "0.1.10",
-  "main": "mysql.js",
+"https://github.com/Shadow53/student-queue-mariadb-plugin#readme",
+  "version": "0.1.4",
+  "main": "mariadb.js",
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "student-queue",
-    "mysql"
+    "mysql",
+    "mariadb",
+    "mariasql"
   ],
   "author": "Shadow53"
 }
