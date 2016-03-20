@@ -345,7 +345,7 @@ ConfigDB.prototype.deleteQueue = function (name, table_name) {
     table_name = (table_name === undefined ? name : table_name);
 
     var del = new Promise(function(resolve, reject){
-        that.client.query("DROP TABLE :name", {name: table_name}, function (err) {
+        that.client.query("DROP TABLE `" + table_name + "`", function (err) {
             if (err) reject(err);
             else resolve();
         });
