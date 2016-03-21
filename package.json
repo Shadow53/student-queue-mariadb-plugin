@@ -23,7 +23,7 @@
   },
   "homepage": 
 "https://github.com/Shadow53/student-queue-mariadb-plugin#readme",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "main": "mariadb.js",
   "devDependencies": {},
   "scripts": {
