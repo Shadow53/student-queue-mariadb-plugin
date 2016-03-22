@@ -272,7 +272,7 @@ function hashPassword(password) {
 }
 
 ConfigDB.prototype.setHash = function (name, password) {
-    return updateArg(name, "password", hashPassword(password), this);
+    return updateArg(name, "hash", hashPassword(password), this);
 };
 
 ConfigDB.prototype.setQueueName = function (oldName, newName) {
