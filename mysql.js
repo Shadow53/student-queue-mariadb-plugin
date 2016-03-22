@@ -6,7 +6,7 @@ var Promise = require("promise");
 var crypto = require("crypto");
 
 function checkName(name){
-    if (typeof name !== "string"){
+    if (typeof name !== "string" || name.toLowerCase() === "queues") {
         return false;
     }
     else{
@@ -55,7 +55,7 @@ RequestDB.prototype.reset = function(){
                 return;
             }
             console.log("Dropping table");
-            connection.query("DELETE FROM " + that.table, function (err) {
+            connection.query("TRUNCATE " + that.table, function (err) {
                 if (err) reject(err);
                 else resolve();
             });
@@ -156,7 +156,7 @@ function ConfigDB(obj){
 
         that.host = obj.host;
         that.user = obj.user;
-        that.password = obj.user;
+        that.password = obj.password;
         that.database = obj.database;
 
         // This gets set in load()
