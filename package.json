@@ -4,7 +4,7 @@
   ],
   "dependencies": {
     "mysql": "2.10.x",
-    "promised-io": "0.3.x"
+    "promise": "7.1.x"
   },
   "description": "MySQL-compatible plugin for my student-queue program",
   "installable": true,
@@ -23,7 +23,7 @@
   },
   "homepage": 
 "https://github.com/Shadow53/student-queue-mysql-plugin#readme",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "main": "mysql.js",
   "devDependencies": {},
   "scripts": {
