@@ -182,7 +182,22 @@ ConfigDB.prototype.createConfigTable = function(){
             "UNIQUE KEY `name` (`name`)" +
             ") ENGINE=MyISAM DEFAULT CHARSET=latin1", function (err, result) {
             if (err) reject(err);
-            else resolve();
+            else {
+                that.connection.query("SELECT * FROM " + that.table + " WHERE `name` = 'admin' LIMIT 1", function (err, result) {
+                    if (err) reject(err);
+                    else {
+                        if (result.length > 0) resolve();
+                        else {
+                            that.connection.query("INSERT INTO " + that.table +
+                                " (`name`, `hash`) VALUES ('admin', '" + hashPassword("password") + "')",
+                                function (err) {
+                                    if (err) reject(err);
+                                    else resolve();
+                                });
+                        }
+                    }
+                });
+            }
         });
     });
 };
@@ -201,6 +216,12 @@ ConfigDB.prototype.addNewQueue = function(obj){
                 obj.table_name = obj.name;
             }
 
+            if (!checkName(obj.table_name)) {
+                return new Promise(function (resolve, reject) {
+                    reject(new Error("Invalid table name: " + obj.table_name));
+                });
+            }
+
             that.connection.query("SELECT * FROM " + that.table + " WHERE `name` = ? LIMIT 1",
                 [obj.name], function (err, result) {
                     if (err) {
@@ -217,7 +238,6 @@ ConfigDB.prototype.addNewQueue = function(obj){
                             [obj.table_name], function (err, result) {
                                 if (err) {
                                     reject(err);
-                                    return;
                                 }
                                 else {
                                     var hasDesc = obj.hasOwnProperty("description");
@@ -287,25 +307,25 @@ ConfigDB.prototype.setQueueName = function (oldName, newName) {
         that.connection.query("SELECT * FROM " + that.table + " WHERE `name` = ? LIMIT 1",
             [oldName], function (err, result) {
                 if (result.length > 0) {
-                    that.connection.query("SELECT * FROM " + that.table + " WHERE `name` = ? LIMIT 1",
-                        [newName], function (err, result) {
-                            if (result.length === 0) {
-                                if (!checkName(newName)) {
-                                    reject(new Error("New name does not meet requirements: alphanumeric or underscore only"));
-                                }
-                                else if (oldName == newName) {
-                                    resolve();
-                                }
-                                else {
+                    if (oldName == newName) {
+                        resolve();
+                    }
+                    else if (!checkName(newName)) {
+                        reject(new Error("New name does not meet requirements: alphanumeric or underscore only"));
+                    }
+                    else {
+                        that.connection.query("SELECT * FROM " + that.table + " WHERE `name` = ? LIMIT 1",
+                            [newName], function (err, result) {
+                                if (result.length === 0) {
                                     that.connection.query("UPDATE " + that.table + "SET `name` = ? WHERE `name` = ?",
                                         [newName, oldName], function (err, result) {
                                             if (err) reject(err);
                                             else resolve();
                                         });
                                 }
-                            }
-                            else reject(new Error("Queue with name " + newName + " already exists"));
-                        });
+                                else reject(new Error("Queue with name " + newName + " already exists"));
+                            });
+                    }
                 }
                 else reject(new Error("Queue with name " + oldName + " does not exist"));
             });
