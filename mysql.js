@@ -384,7 +384,7 @@ ConfigDB.prototype.getAllQueues = function () {
 ConfigDB.prototype.load = function () {
     var that = this;
     return new Promise(function (resolve, reject) {
-        that.connection.query("SELECT `name`, `table_name` FROM " + that.table + " ORDER BY `name` DESC",
+        that.connection.query("SELECT `name`, `table_name` FROM " + that.table + " WHERE `name` != 'admin' ORDER BY `name` DESC",
             function (err, result) {
                 if (err) reject(err);
                 else {
