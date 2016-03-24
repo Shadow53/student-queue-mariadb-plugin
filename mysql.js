@@ -339,7 +339,7 @@ ConfigDB.prototype.setDescription = function (name, desc) {
 ConfigDB.prototype._getHash = function (name) {
     var that = this;
     return new Promise(function (resolve, reject) {
-        if (that.queues.hasOwnProperty(name)) {
+        if (that.queues.hasOwnProperty(name) || name === "admin") {
             that.connection.query("SELECT `hash` FROM " + that.table + " WHERE `name` = ? LIMIT 1",
                 [name], function (err, result) {
                     if (err) reject(err);
