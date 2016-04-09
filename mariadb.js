@@ -116,7 +116,7 @@ function ConfigDB(obj){
     if (this instanceof ConfigDB){
         var that = this;
         if (!(obj.hasOwnProperty("host") && obj.hasOwnProperty("user") && obj.hasOwnProperty("password") &&
-            obj.hasOwnProperty("db"))) {
+            obj.hasOwnProperty("database"))) {
             throw new Error("Missing one or more of the required options: host, user, password, db")
         }
 
@@ -125,7 +125,7 @@ function ConfigDB(obj){
         that.host = obj.host;
         that.user = obj.user;
         that.password = obj.password;
-        that.db = obj.db;
+        that.db = obj.db = obj.database;
 
         // This gets set in load()
         that.queues = {};
